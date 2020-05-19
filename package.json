@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=dev ./node_modules/.bin/nodemon bin/www.js",
-    "prod": "pm2 reload bin/ecosystem.config.js --env prod",
+    "prod": "pm2 start bin/ecosystem.config.js --env prod",
     "deploy": "pm2 deploy bin/ecosystem.config.js production",
     "deploy-setup": "pm2 deploy bin/ecosystem.config.js production setup"
   },
