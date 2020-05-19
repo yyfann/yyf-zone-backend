@@ -9,8 +9,8 @@ const cors = require("koa2-cors");
 app.use(cors());
 
 // 根据运行环境选择配置
-// const env = process.env.NODE_ENV || 'dev'
-const env = 'dev'
+const env = process.env.NODE_ENV || 'dev'
+// const env = 'dev'
 const config = require(`./config/${env}`)
 
 

@@ -14,7 +14,7 @@ module.exports = {
       repo: 'git@github.com:yyfann/yyf-zone-backend.git',
       ref: 'origin/master',
       path: '/root/projects/yyf-zone/backend',
-      'post-deploy': 'npm install && npm run prod'
+      'post-deploy': 'git pull origin master && npm install && npm run prod'
     }
   }
 };
