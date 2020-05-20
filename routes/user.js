@@ -1,16 +1,16 @@
 const router = require('koa-router')()
 
 
-const Person = require('../db/models/person')
+const User = require('../db/models/user')
 
 router.prefix('/users')
 
 // 增加
 router.post('/addPerson', async function(ctx){
-  // 从post请求中读取name, age
-  const person = new Person({
-    name: ctx.request.body.name,
-    age: ctx.request.body.age,
+  // 从post请求中读取name, password
+  const person = new User({
+    username: ctx.request.body.username,
+    password: ctx.request.body.password,
   })
 
   // 将实例保存, tip: 正常需要容错处理
@@ -19,45 +19,45 @@ router.post('/addPerson', async function(ctx){
     code: 200,
   }
 })
-// curl -d 'name=lijian&age=16' http://localhost:3000/users/addPerson
+// curl -d 'username=lijian&password=16' http://localhost:3000/users/addPerson
 
 // 查询
 router.get('/getPerson', async function (ctx, next) {
   let search = {
-    name: ctx.request.query.name
+    username: ctx.request.query.username
   }
 
   search = _.pickBy(search, val => !_.isNil(val))
 
-  const data = await Person.find(search)
+  const data = await User.find(search)
   ctx.body = {
     code: 200,
     data,
   }
 })
-// curl http://localhost:3000/users/getPerson?name=lijian
+// curl http://localhost:3000/users/getPerson?username=lijian
 // curl http://localhost:3000/users/getPerson
 
 // 编辑
 router.post('/updatePerson', async function (ctx, next) {
-  const res = await Person.where({name: ctx.request.body.name})
+  const res = await User.where({username: ctx.request.body.username})
     .update({
-      age: ctx.request.body.age
+      password: ctx.request.body.password
     })
   ctx.body = {code: 200}
 })
-// curl -d 'name=lijian&age=19' http://localhost:3000/users/updatePerson
+// curl -d 'username=lijian&password=19' http://localhost:3000/users/updatePerson
 
 
 // 删除
 router.post('/removePerson', async function (ctx, next) {
   console.log(ctx.request,'ctx.request')
   console.log(ctx.request.body._id,'ctx.request.body._id')
-  await Person.where({_id: ctx.request.body._id})
+  await User.where({_id: ctx.request.body._id})
     .remove()
   ctx.body = {code: 200,}
 })
-// curl -d 'name=lijian&' http://localhost:3000/users/removePerson
+// curl -d 'username=lijian&' http://localhost:3000/users/removePerson
 
 
 

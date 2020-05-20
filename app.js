@@ -6,12 +6,14 @@ require('./plugins/global-varies')
 
 // 跨域
 const cors = require("koa2-cors");
-app.use(cors());
+app.use(cors({
+  // 允许cookie
+  credentials: true,
+}));
 
 // 根据运行环境选择配置
 const env = process.env.NODE_ENV || 'dev'
-// const env = 'dev'
-const config = require(`./config/${env}`)
+global.CONFIG = require(`./config/${env}`)
 
 
 // error handler
@@ -22,7 +24,7 @@ onerror(app)
 const bodyparser = require("koa-bodyparser");
 app.use(bodyparser({
   strict: false,
-  enableTypes:['json', 'form', 'text']
+  enableTypes: ['json', 'form', 'text']
 }))
 const json = require("koa-json");
 app.use(json())
@@ -38,19 +40,21 @@ app.use(async (ctx, next) => {
   // console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-// routes
-require('./routes/index')(app)
-
 // 数据库
 const mongoose = require('mongoose')
-mongoose.connect(config.db, {
+mongoose.connect(CONFIG.db, {
   useNewUrlParser: true,
 })
-
 
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 });
+
+// jwt token (passport)
+require('./plugins/passport')(app)
+
+// routes
+require('./routes/index')(app)
 
 module.exports = app
